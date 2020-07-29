@@ -24,9 +24,13 @@ body {
 }
 
 .row {
-    padding: 2%;
+    padding: 1.5%;
 }
 
 .container {
     background-color: #f9f7f7;
+}
+
+.modalBold {
+    font-weight: bold;
 }
