@@ -10,10 +10,10 @@ $(".submit").click(function() {
     let formInputs = gatherFormInputs();
     let formCompletionInfo = checkFormCompletion(formInputs);
     if(formCompletionInfo[0]) {
+        modalUpdate(formInputs);
         $("#popUpContinue").modal("show");
     } else {
         missingInputString = formCompletionInfo[1].join("\n")
-        // alert(`Failed! Please complete form\nMissing:\n\n${missingInputString}`);
         missingInputFlash(formCompletionInfo[2]);
     }
 });
@@ -75,6 +75,7 @@ function checkFormCompletion(formInputs) {
         completionCheck[1].push("Leave Type");
         completionCheck[2].push("leaveTypesLabel");
     }
+    console.log(completionCheck);
     return completionCheck;
 }
 
@@ -108,7 +109,6 @@ function gatherFormInputs() {
         "leaveTypes":[],
         "comments":$("#comments").val(),
     }
-
     formInputs["leaveTypes"] = getLeaveTypes();
 
     return formInputs;
@@ -295,4 +295,35 @@ function addBackgroundFlash(elementId) {
 
 function removeBackgroundFlash(elementId) {
     $("." + elementId).removeClass("flash-on");
+}
+
+function modalUpdate(formInput) {
+    //Updates the modal div with the form information
+    
+    let firstName = formInput["firstName"];
+    let lastName = formInput["lastName"];
+    let leaveStart = formInput["leaveStart"];
+    let leaveEnd = formInput["leaveEnd"];
+    let returnDate = formInput["returnDate"];
+    let leaveTypes = formInput["leaveTypes"].join(", ");
+    let comments = formInput["comments"];
+
+    leaveStart = getModalDate(leaveStart);
+    leaveEnd = getModalDate(leaveEnd);
+    returnDate = getModalDate(returnDate);
+
+    let modalBodyName = `${firstName} ${lastName}`;
+    
+    $(".modalStartDate").text(leaveStart);
+    $(".modalEndDate").text(leaveEnd);
+    $(".modalReturnDate").text(returnDate);
+    $(".modalName").text(modalBodyName);
+    $(".modalLeaveTypes").text(leaveTypes);
+    $(".modalCommentsInput").text(comments);
+}
+
+function getModalDate(date) {
+    //slices the date object int he form 2020-07-30 and returns M/D/Year in mm/dd/yy
+    modifiedDate = `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(2,4)}`;
+    return modifiedDate;
 }
