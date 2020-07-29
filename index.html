@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -26,7 +26,7 @@
 
 
         <div class="row">
-            <div class="col col-10">
+            <div class="col col-12">
                 <div class="row">
                     <div class="col">
                         <label class="firstNameLabel" for="firstName">First Name:</label>
@@ -136,9 +136,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-2">
+            <!-- <div class="col col-2">
 
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -149,13 +149,16 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Time Off Review</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          ...
+          <p class="modalName"></p>
+          <p class="modalDates">From: <span class="modalStartDate modalBold"></span> to <span class="modalEndDate modalBold"></span> and returning <span class="modalReturnDate modalBold"></span></p>
+          <p class="modalTypesP">Leave Types: <span class="modalLeaveTypes modalBold"></span></p>
+          <p class="modalComments">Comments: <span class="modalCommentsInput"></span></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
