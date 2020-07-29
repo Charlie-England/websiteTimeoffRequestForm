@@ -1,0 +1,32 @@
+#comments {
+    width: 93%;
+    height: 10em;
+    text-align: start
+}
+
+h3 {
+    font-weight: bold;
+    text-align: center;
+    padding-top: 30px;
+}
+.submit {
+    float: right;
+    margin-right: 15%;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: white;
+}
+
+.flash-on {
+    background-color: #e4e3e3;
+}
+
+.row {
+    padding: 2%;
+}
+
+.container {
+    background-color: #f9f7f7;
+}
