@@ -2,10 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 let app = express();
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('public'));
 
 app.get("/",function(req,res) {
-    res.sendFile(__dirname+"/public/index.html");
+    req.sendFile(__dirname+"/public/index.html");
+})
+
+app.post("/",function(req, res) {
+    req.on("data", function(data) {
+        console.log(JSON.parse(data));
+    })
+    res.sendFile(__dirname+"/public/index.html")
 })
 
 app.listen(3000, function() {

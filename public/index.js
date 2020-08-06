@@ -33,6 +33,20 @@ $("#returnDate").change(function() {
     updateDayLabel();
 })
 
+$(".send-final").click(function() {
+    let xhttp = new XMLHttpRequest();
+    const data={
+        name: "first and last",
+        dateStart: "start date",
+        dateEnd: "end date",
+        returnDate: "return date",
+        comments: "comments"
+    }
+    xhttp.open("POST","/", true);
+    xhttp.setRequestHeader('Content-Type', 'application/json charset=UTF-8');
+    xhttp.send(JSON.stringify(data));
+})
+
 //Set minimum dates to current date
 updateCalendarMins();
 
@@ -326,4 +340,8 @@ function getModalDate(date) {
     //slices the date object int he form 2020-07-30 and returns M/D/Year in mm/dd/yy
     modifiedDate = `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(2,4)}`;
     return modifiedDate;
+}
+
+function sendRequestToServer() {
+
 }
