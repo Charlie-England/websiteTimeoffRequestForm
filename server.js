@@ -13,7 +13,8 @@ app.post("/",function(req, res) {
     req.on("data", function(data) {
         console.log(JSON.parse(data));
     })
-    res.sendFile(__dirname+"/public/index.html")
+    res.send("done!")
+    // res.sendFile(__dirname+"/public/resubmit.html")
 })
 
 app.listen(3000, function() {

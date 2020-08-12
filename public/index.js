@@ -35,16 +35,11 @@ $("#returnDate").change(function() {
 
 $(".send-final").click(function() {
     let xhttp = new XMLHttpRequest();
-    const data={
-        name: "first and last",
-        dateStart: "start date",
-        dateEnd: "end date",
-        returnDate: "return date",
-        comments: "comments"
-    }
+    let formInputs = gatherFormInputs();
+
     xhttp.open("POST","/", true);
     xhttp.setRequestHeader('Content-Type', 'application/json charset=UTF-8');
-    xhttp.send(JSON.stringify(data));
+    xhttp.send(JSON.stringify(formInputs));
 })
 
 //Set minimum dates to current date
@@ -89,12 +84,12 @@ function checkFormCompletion(formInputs) {
         completionCheck[1].push("Leave Type");
         completionCheck[2].push("leaveTypesLabel");
     }
-    console.log(completionCheck);
+    if (formInputs["providerType"] == "0") {
+        completionCheck[0] = false;
+        completionCheck[1].push("Provider Type");
+        completionCheck[2].push("provider-select");
+    }
     return completionCheck;
-}
-
-function submitForm(formInputs) {
-    //submit form then ask if 
 }
 
 function clearForm() {
@@ -107,6 +102,7 @@ function clearForm() {
     $(".startDateDay").text("");
     $(".endDateDay").text("");
     $(".returnDateDay").text("");
+    $("#providerType").val("0");
     $("#comments").val("");
 
     clearCheckboxes();
@@ -117,6 +113,7 @@ function gatherFormInputs() {
     let formInputs = {
         "firstName":$("#firstName").val(),
         "lastName":$("#lastName").val(),
+        "providerType":$("#providerType").val(),
         "leaveStart":$("#startDate").val(),
         "leaveEnd":$("#endDate").val(),
         "returnDate":$("#returnDate").val(),
@@ -340,8 +337,4 @@ function getModalDate(date) {
     //slices the date object int he form 2020-07-30 and returns M/D/Year in mm/dd/yy
     modifiedDate = `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(2,4)}`;
     return modifiedDate;
-}
-
-function sendRequestToServer() {
-
 }
