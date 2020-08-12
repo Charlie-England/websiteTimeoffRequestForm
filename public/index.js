@@ -40,6 +40,9 @@ $(".send-final").click(function() {
     xhttp.open("POST","/", true);
     xhttp.setRequestHeader('Content-Type', 'application/json charset=UTF-8');
     xhttp.send(JSON.stringify(formInputs));
+
+    $("#popUpContinue").modal("hide");
+    $("#completedModal").modal("show");
 })
 
 //Set minimum dates to current date
@@ -84,7 +87,7 @@ function checkFormCompletion(formInputs) {
         completionCheck[1].push("Leave Type");
         completionCheck[2].push("leaveTypesLabel");
     }
-    if (formInputs["providerType"] == "0") {
+    if (formInputs["providerType"] == "null") {
         completionCheck[0] = false;
         completionCheck[1].push("Provider Type");
         completionCheck[2].push("provider-select");
@@ -121,6 +124,7 @@ function gatherFormInputs() {
         "comments":$("#comments").val(),
     }
     formInputs["leaveTypes"] = getLeaveTypes();
+    formInputs = modifyProviderType(formInputs);
 
     return formInputs;
 }
@@ -313,6 +317,7 @@ function modalUpdate(formInput) {
     
     let firstName = formInput["firstName"];
     let lastName = formInput["lastName"];
+    let providerType = formInput["providerType"];
     let leaveStart = formInput["leaveStart"];
     let leaveEnd = formInput["leaveEnd"];
     let returnDate = formInput["returnDate"];
@@ -323,7 +328,7 @@ function modalUpdate(formInput) {
     leaveEnd = getModalDate(leaveEnd);
     returnDate = getModalDate(returnDate);
 
-    let modalBodyName = `${firstName} ${lastName}`;
+    let modalBodyName = `${firstName} ${lastName}, ${providerType}`;
     
     $(".modalStartDate").text(leaveStart);
     $(".modalEndDate").text(leaveEnd);
@@ -337,4 +342,35 @@ function getModalDate(date) {
     //slices the date object int he form 2020-07-30 and returns M/D/Year in mm/dd/yy
     modifiedDate = `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(2,4)}`;
     return modifiedDate;
+}
+
+function modifyProviderType(formInputs) {
+    //takes formInputs and modifies providerType to correlate to the value
+    //returns this modified formInputs
+    let providerNum = formInputs["providerType"];
+    let providerString = "";
+
+    switch (providerNum) {
+        case "0":
+            providerString = "null";
+            break;
+        case "1": 
+            providerString = "MLT";
+            break;
+        case "2":
+            providerString = "MD";
+            break;
+        case "3":
+            providerString = "PhD";
+            break;
+        case "4":
+            providerString = "MHW Asst/MA";
+            break;
+        case "5":
+            providerString = "RN";
+            break;
+    }
+
+    formInputs["providerType"] = providerString;
+    return formInputs;
 }
