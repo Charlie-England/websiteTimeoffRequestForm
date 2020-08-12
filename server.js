@@ -17,7 +17,7 @@ app.post("/",function(req, res) {
     // res.sendFile(__dirname+"/public/resubmit.html")
 })
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
     console.log("Server running on port 3000...");
 })
 
