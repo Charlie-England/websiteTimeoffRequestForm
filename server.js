@@ -58,7 +58,8 @@ function storeData(newData) {
         } else {
             let currentFile = JSON.parse(data);
             newData = JSON.parse(newData);
-            currentFile.table.push(newData);
+            let providerType = newData.providerType;
+            currentFile[providerType].push(newData);
 
             updatedFile = JSON.stringify(currentFile)
 
