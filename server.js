@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
+import { getEmailPassword } from "./api_pswds.js";
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -31,7 +32,7 @@ function sendRequestEmail(data) {
         service: "gmail", 
         auth: {
             user: "facmhwtimeoffrequestfunneler@gmail.com",
-            pass: '766dkfJJu2#'
+            pass: getEmailPassword()
         }
     });
 
