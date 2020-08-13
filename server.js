@@ -31,7 +31,8 @@ function sendRequestEmail(data) {
         service: "gmail", 
         auth: {
             user: "facmhwtimeoffrequestfunneler@gmail.com",
-            pass: getEmailPassword()
+            // pass: getEmailPassword()
+            pass: process.env.GMAIL_PASSWORD
         }
     });
 
