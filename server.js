@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+const fs = require("fs");
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -12,11 +13,11 @@ app.get("/",function(req,res) {
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
-        sendRequestEmail(data);
+        storeData(data);
+        // sendRequestEmail(data);
         console.log(JSON.parse(data));
     })
     res.send("done!")
-    // res.sendFile(__dirname+"/public/resubmit.html")
 })
 
 app.listen(process.env.PORT || 3000, function() {
@@ -27,7 +28,7 @@ function sendRequestEmail(data) {
     let parsedData = JSON.parse(data);
 
     let transporter = nodemailer.createTransport({
-        service: "email", 
+        service: "gmail", 
         auth: {
             user: "facmhwtimeoffrequestfunneler@gmail.com",
             pass: '766dkfJJu2#'
@@ -46,6 +47,28 @@ function sendRequestEmail(data) {
             console.log(error);
         } else {
             console.log("Email sent: " + info.response);
+        }
+    })
+}
+
+function storeData(newData) {
+    fs.readFile("requests.json", "utf8", function readFileCallback(err, data) {
+        if (err) {
+            console.log(err);
+        } else {
+            let currentFile = JSON.parse(data);
+            newData = JSON.parse(newData);
+            currentFile.table.push(newData);
+
+            updatedFile = JSON.stringify(currentFile)
+
+            fs.writeFile("requests.json", updatedFile, "utf8", (err, jsonString) => {
+                if (err) {
+                    console.log("File read failed:", err)
+                    return
+                }
+                console.log("Completed Write")
+            });
         }
     })
 }
