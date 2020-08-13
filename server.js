@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-import { getEmailPassword } from "./api_pswds.js";
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,7 +14,7 @@ app.get("/",function(req,res) {
 app.post("/",function(req, res) {
     req.on("data", function(data) {
         storeData(data);
-        // sendRequestEmail(data);
+        sendRequestEmail(data);
         console.log(JSON.parse(data));
     })
     res.send("done!")
@@ -48,6 +47,19 @@ function sendRequestEmail(data) {
             console.log(error);
         } else {
             console.log("Email sent: " + info.response);
+        }
+    })
+}
+
+function getEmailPassword() {
+    //reaches out to the pswd json and gets email password
+    let pswd = ""
+    fs.readFile("api_pswds.json", (err, data) => {
+        if (err) { 
+            throw err;
+        } else {
+            let passwordFile = JSON.parse(data);
+            return passwordFile.emailPassword
         }
     })
 }
