@@ -13,11 +13,9 @@ app.get("/",function(req,res) {
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
-        // storeData(data);
         let listOfDates = modifyToListOfDates(data);
         storeDates(listOfDates);
-        // sendRequestEmail(data);
-        // console.log(JSON.parse(data));
+        sendRequestEmail(data);
     })
     res.send("done!")
 })
