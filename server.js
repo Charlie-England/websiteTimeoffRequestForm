@@ -13,9 +13,11 @@ app.get("/",function(req,res) {
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
-        storeData(data);
-        sendRequestEmail(data);
-        console.log(JSON.parse(data));
+        // storeData(data);
+        let listOfDates = modifyToListOfDates(data);
+        storeDates(listOfDates);
+        // sendRequestEmail(data);
+        // console.log(JSON.parse(data));
     })
     res.send("done!")
 })
@@ -54,7 +56,6 @@ function sendRequestEmail(data) {
 
 function getEmailPassword() {
     //reaches out to the pswd json and gets email password
-    let pswd = ""
     fs.readFile("api_pswds.json", (err, data) => {
         if (err) { 
             throw err;
@@ -65,19 +66,70 @@ function getEmailPassword() {
     })
 }
 
-function storeData(newData) {
+
+function modifyToListOfDates(timeOffRequest) {
+    timeOffRequest = JSON.parse(timeOffRequest);
+    let leaveStart = timeOffRequest.leaveStart;
+    let leaveEnd = timeOffRequest.leaveEnd;
+    let modifiedDateList = []
+
+    if (leaveStart == leaveEnd) {
+        let moddedRequest = {
+            date: leaveStart,
+            name: `${timeOffRequest.firstName} ${timeOffRequest.lastName}`,
+            providerType: timeOffRequest.providerType,
+            leaveTypes: timeOffRequest.leaveTypes,
+            comments: timeOffRequest.comments
+        }
+        modifiedDateList.push(moddedRequest);
+        
+    } else {
+        let listOfDates = getRangeOfDates(leaveStart, leaveEnd);
+        for (let i = 0; i < listOfDates.length; i++) {
+            let selectedDate = listOfDates[i];
+
+            let moddedRequest = {
+                date: selectedDate,
+                name: `${timeOffRequest.firstName} ${timeOffRequest.lastName}`,
+                providerType: timeOffRequest.providerType,
+                leaveTypes: timeOffRequest.leaveTypes,
+                comments: timeOffRequest.comments
+            }
+
+            modifiedDateList.push(moddedRequest);
+
+        }
+    }
+
+    return modifiedDateList;
+}
+
+
+function storeDates(dateList) {
     fs.readFile("requests.json", "utf8", function readFileCallback(err, data) {
         if (err) {
             console.log(err);
         } else {
             let currentFile = JSON.parse(data);
-            newData = JSON.parse(newData);
-            let providerType = newData.providerType;
-            currentFile[providerType].push(newData);
 
-            updatedFile = JSON.stringify(currentFile)
+            for (let i = 0; i < dateList.length; i++) {
+                let dateCurrent = dateList[i].date;
 
+                try {
+                    currentFile[dateCurrent];
+                    currentFile[dateCurrent].push(dateList[i]);
+                } catch {
+                    currentFile[dateCurrent] = []
+                    currentFile[dateCurrent].push(dateList[i])
+
+                    console.log(`Date ${dateCurrent} not found, created new date`)
+                }
+            }
+
+            let updatedFile = JSON.stringify(currentFile);
+                
             fs.writeFile("requests.json", updatedFile, "utf8", (err, jsonString) => {
+
                 if (err) {
                     console.log("File read failed:", err)
                     return
@@ -85,5 +137,38 @@ function storeData(newData) {
                 console.log("Completed Write")
             });
         }
-    })
+    }
+)}
+
+function getRangeOfDates(firstDate, lastDate) {
+    let firstDateClass = new Date(firstDate);
+    let lastDateClass = new Date(lastDate);
+    const oneDay = 24 * 60 * 60 * 1000;
+    let datesReturnList = [];
+
+    let diffDays = Math.round(Math.abs((firstDateClass-lastDateClass) / oneDay))
+
+    for (let i =0; i <= diffDays; i++) {
+        let dateToPush = new Date()
+        dateToPush.setDate(firstDateClass.getDate() + (i+1));
+
+        let day = dateToPush.getDay();
+        if (day != "0" && day != "6") {
+    
+            let dateDay = dateToPush.getDate();
+            if (dateDay.length < 2) {
+                dateDay = `0${dateDay}`;
+            }
+
+            let month = dateToPush.getMonth() + 1;
+            if (month.toString().length < 2) {
+                month = `0${month}`;
+            }
+            let dateString = `${dateToPush.getFullYear()}-${month}-${dateDay}`
+            datesReturnList.push(dateString);
+        }
+    }
+    
+    return datesReturnList;
+
 }
