@@ -1,0 +1,42 @@
+{
+    "RDO":{
+        "Monday":["Susan"],
+        "Tuesday":[],
+        "Wednesday":[],
+        "Thursday":[],
+        "Friday":[]
+    },
+
+    "StaffingLevels":{
+        "1":
+            {"MLT":10,
+            "MD":7,
+            "PhD":3,
+            "MHW Asst/MA":1,
+            "RN":2},
+        "2":            
+            {"MLT":10,
+            "MD":7,
+            "PhD":3,
+            "MHW Asst/MA":1,
+            "RN":2},
+        "3":
+            {"MLT":10,
+                "MD":7,
+                "PhD":3,
+                "MHW Asst/MA":1,
+                "RN":2},
+        "4":
+            {"MLT":10,
+                "MD":7,
+                "PhD":3,
+                "MHW Asst/MA":1,
+                "RN":2},
+        "5":            
+            {"MLT":10,
+                "MD":7,
+                "PhD":3,
+                "MHW Asst/MA":1,
+                "RN":2}
+    }
+}

@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
+const { resolve } = require("path");
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -20,8 +21,67 @@ app.post("/",function(req, res) {
     res.send("done!")
 })
 
-app.get("/calendarview", function(req, res) {
-    res.redirect("/calendarview.html")
+app.post("/staffingreport", function(req, res) {
+    let staffingReport = {}
+    req.on("data", function(data) {
+        let date = JSON.parse(data);
+        //takes a date and gets the current staffing levels for:
+        //MLT, MD, PHD, MHW Asst/MA, RN
+        //returns an object with levels
+        let returnStaffingReport = {
+            "MLT":[],
+            "MD":[],
+            "PhD":[],
+            "MHW Asst/MA":[],
+            "RN":[]
+        }
+
+        //get staffing level from json
+        fs.readFile("staffing.json", "utf8", function readFileCallback(err, data) {
+            if (err) {
+                console.log(err);
+            } else {
+                let staffingLevels = JSON.parse(data);
+
+                let dateClass = new Date(date);
+                day = dateClass.getDay()
+
+                if (day != 0 && day != 6) {
+                    let dayStaffing = staffingLevels.StaffingLevels[day];
+
+                    returnStaffingReport["MLT"].push(dayStaffing["MLT"]);
+                    returnStaffingReport["MLT"].push(dayStaffing["MLT"]);
+                    returnStaffingReport["MD"].push(dayStaffing["MD"]);
+                    returnStaffingReport["MD"].push(dayStaffing["MD"]);
+                    returnStaffingReport["PhD"].push(dayStaffing["PhD"]);
+                    returnStaffingReport["PhD"].push(dayStaffing["PhD"]);
+                    returnStaffingReport["MHW Asst/MA"].push(dayStaffing["MHW Asst/MA"]);
+                    returnStaffingReport["MHW Asst/MA"].push(dayStaffing["MHW Asst/MA"]);
+                    returnStaffingReport["RN"].push(dayStaffing["RN"]);
+                    returnStaffingReport["RN"].push(dayStaffing["RN"]);
+                }
+
+                fs.readFile("requests.json", "utf8", function readFileCallback(err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        let requestsData = JSON.parse(data);
+                        let dateRequests = requestsData[date];
+            
+                        try {
+                            for (let i = 0; i < dateRequests.length; i++) {
+                                let providerType = dateRequests[i].providerType;
+                                returnStaffingReport[providerType][1]--;
+                            }
+                        } catch {
+                            console.log("date not in requests")
+                        }
+                        res.send(JSON.stringify(returnStaffingReport))
+                    }
+                })
+            }
+        })
+    })
 })
 
 app.listen(process.env.PORT || 3000, function() {
@@ -174,5 +234,4 @@ function getRangeOfDates(firstDate, lastDate) {
     }
     
     return datesReturnList;
-
 }

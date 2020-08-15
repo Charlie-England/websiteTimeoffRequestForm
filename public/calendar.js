@@ -1,10 +1,8 @@
 updateCalendarMins()
 
 $("#selectDate").change(function() {
-    console.log("hey")
+    staffingReportMain()
 })
-
-
 
 function updateCalendarMins() {
     //goes through the calendars and updates the minimum and maximum allowed values
@@ -26,4 +24,28 @@ function updateCalendarMins() {
     
     calendar.setAttribute("min", today);
     calendar.setAttribute("max", maxDate);
+}
+
+function staffingReportMain() {
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.addEventListener("load", reqListener)
+
+    let date = $("#selectDate").val();
+
+    xhttp.open("POST","/staffingreport")
+    xhttp.setRequestHeader('Content-Type', 'application/json charset=UTF-8');
+    xhttp.send(JSON.stringify(date));
+}
+
+function reqListener() {
+    let staffingReport = JSON.parse(this.responseText);
+    console.log(staffingReport)
+
+    $(".staffing-report").append(`<p>MLT: ${staffingReport["MLT"][0]}/${staffingReport["MLT"][1]}</p>`);
+    $(".staffing-report").append(`<p>MD: ${staffingReport["MD"][0]}/${staffingReport["MD"][1]}</p>`);
+    $(".staffing-report").append(`<p>PhD: ${staffingReport["PhD"][0]}/${staffingReport["PhD"][1]}</p>`);
+    $(".staffing-report").append(`<p>MHW Asst/MA: ${staffingReport["MHW Asst/MA"][0]}/${staffingReport["MHW Asst/MA"][1]}</p>`);
+    $(".staffing-report").append(`<p>RN: ${staffingReport["RN"][0]}/${staffingReport["RN"][1]}</p>`);
+
 }
