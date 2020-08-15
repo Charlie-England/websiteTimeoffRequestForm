@@ -22,20 +22,35 @@
 <body>
 
     <div class="container">
+        <h1>Current Time Off View</h1>
+        <hr>
 
         <div class="row">
-            <div class="col">
-                <button class="btn btn-info">Home</button>
+            <div class="col col-6 date-select">
+                <label for="selectDate">Select Day</label>
+                <input class="calendarDates" type="date" id="selectDate" name="date-end"
+                value=""
+                min="" max="2025-12-31">
+                <label for="selectDate" class="endDateDay"></label>
+            </div>
+
+            <div class="col col-6">
+                <button id="log-in" class="btn btn-info float-right">Admin</button>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
                 <hr>
-
             </div>
         </div>
+
+
+
+
+
     </div>
-    
+
+    <script src="calendar.js"></script>
 </body>
 </html>

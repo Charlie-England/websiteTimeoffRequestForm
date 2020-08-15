@@ -39,5 +39,9 @@ body {
     margin-top: 20px;
 }
 
-.btn-view-calendar {
+.a-href {
+    color: white;
+    padding: 5px;
 }
+
+/* Calendar View */
