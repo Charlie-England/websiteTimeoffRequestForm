@@ -8,21 +8,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 app.get("/",function(req,res) {
-    req.sendFile(__dirname+"/public/index.html");
+    res.sendFile(__dirname+"/public/index.html");
 })
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
         let listOfDates = modifyToListOfDates(data);
         storeDates(listOfDates);
-        sendRequestEmail(data);
+        // sendRequestEmail(data);
     })
     res.send("done!")
+})
+
+app.get("/calendarview", function(req, res) {
+    res.redirect("/calendarview.html")
 })
 
 app.listen(process.env.PORT || 3000, function() {
     console.log("Server running on port 3000...");
 })
+
+
 
 function sendRequestEmail(data) {
     let parsedData = JSON.parse(data);

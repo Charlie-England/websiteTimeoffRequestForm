@@ -66,33 +66,44 @@
             </div>
 
             <div class="col col-12">
+                
                 <div class="row">
-                    <div class="col">
-                        <label for="startDate">First Day of Leave:</label>
-                        <input class="calendarDates" type="date" id="startDate" name="date-start"
-                        value=""
-                        min="2020-07-28" max="2025-12-31">
-                        <label for="startDate" class="startDateDay"></label>
+                    <div class="col col-8">
+                        <div class="row">
+                            <div class="col">
+                                <label for="startDate">First Day of Leave:</label>
+                                <input class="calendarDates" type="date" id="startDate" name="date-start"
+                                value=""
+                                min="2020-07-28" max="2025-12-31">
+                                <label for="startDate" class="startDateDay"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="endDate">Last Day of Leave:</label>
+                                <input class="calendarDates" type="date" id="endDate" name="date-end"
+                                value=""
+                                min="" max="2025-12-31">
+                                <label for="endDate" class="endDateDay"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="returnDate">Return to work:</label>
+                                <input class="calendarDates" type="date" id="returnDate" name="return-date"
+                                value=""
+                                min="" max="2025-12-31">
+                                <label for="returnDate" class="returnDateDay"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-4">
+                        <button class="btn btn-info btn-view-coverage float-right">Check Coverage -></button>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <label for="endDate">Last Day of Leave:</label>
-                        <input class="calendarDates" type="date" id="endDate" name="date-end"
-                        value=""
-                        min="" max="2025-12-31">
-                        <label for="endDate" class="endDateDay"></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label for="returnDate">Return to work:</label>
-                        <input class="calendarDates" type="date" id="returnDate" name="return-date"
-                        value=""
-                        min="" max="2025-12-31">
-                        <label for="returnDate" class="returnDateDay"></label>
-                    </div>
-                </div>
+
+
+
 
                 <div class="col col-12">
                     <hr>

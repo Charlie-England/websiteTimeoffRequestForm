@@ -45,6 +45,10 @@ $(".send-final").click(function() {
     $("#completedModal").modal("show");
 })
 
+$(".btn-view-coverage").click(function() {
+    window.location.href ="/calendarview.html";
+})
+
 //Set minimum dates to current date
 updateCalendarMins();
 
