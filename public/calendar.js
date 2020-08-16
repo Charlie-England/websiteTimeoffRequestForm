@@ -27,6 +27,7 @@ function updateCalendarMins() {
 }
 
 function staffingReportMain() {
+    $(".staffing-report").empty();
     let xhttp = new XMLHttpRequest();
 
     xhttp.addEventListener("load", reqListener)
@@ -39,13 +40,47 @@ function staffingReportMain() {
 }
 
 function reqListener() {
+    //Called with json of staffing report from server for a day
+    //creates divs for each provier type to show staffing level
     let staffingReport = JSON.parse(this.responseText);
-    console.log(staffingReport)
 
-    $(".staffing-report").append(`<p>MLT: ${staffingReport["MLT"][0]}/${staffingReport["MLT"][1]}</p>`);
-    $(".staffing-report").append(`<p>MD: ${staffingReport["MD"][0]}/${staffingReport["MD"][1]}</p>`);
-    $(".staffing-report").append(`<p>PhD: ${staffingReport["PhD"][0]}/${staffingReport["PhD"][1]}</p>`);
-    $(".staffing-report").append(`<p>MHW Asst/MA: ${staffingReport["MHW Asst/MA"][0]}/${staffingReport["MHW Asst/MA"][1]}</p>`);
-    $(".staffing-report").append(`<p>RN: ${staffingReport["RN"][0]}/${staffingReport["RN"][1]}</p>`);
+    let PhDPercent =  (staffingReport["PhD"][1]/staffingReport["PhD"][0])*100;
+    let mhwasstmaPercent =  (staffingReport["MHW Asst/MA"][1]/staffingReport["MHW Asst/MA"][0])*100;
+    let rnPercent =  (staffingReport["RN"][1]/staffingReport["RN"][0])*100;
+    $(".staffing-report").append("<div class='row staffing-row'></div>")
+
+    //MLT
+    let mltPercent = (staffingReport["MLT"][1]/staffingReport["MLT"][0])*100;
+    let mltColor = determineColor(mltPercent);
+    createBars("mlt", mltPercent, mltColor);
+
+    //MD
+    let mdPercent =  (staffingReport["MD"][1]/staffingReport["MD"][0])*100;
+    let mdColor = determineColor(mdPercent);
+    createBars("md", mdPercent, mdColor);
+
+    //PhD
+
+    //RN
+
+    //MHW Asst
 
 }
+
+function determineColor(percent) {
+    if (percent < 50) {
+        return "red";
+    } else if (percent < 75) {
+        return "orange";
+    } else {
+        return "green"
+    }
+}
+
+function createBars(providerType, percent, color) {
+    $(".staffing-row").append(`<div class='${providerType}-div col staffing-div'><p>${providerType}</p></div>`);
+    $(`.${providerType}-div`).append(`<div class='total-${providerType}-staff total-staff-div'></div>`);
+    $(`.${providerType}-div`).append(`<div class='${providerType}-staffing-level staffing-percent-div'></div>`);
+    $(`.${providerType}-staffing-level`).css({"height":`${percent}%`, "background-color":`${color}`, "bottom":`${percent}%`});
+
+} 

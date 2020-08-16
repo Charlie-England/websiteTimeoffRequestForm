@@ -45,3 +45,20 @@ body {
 }
 
 /* Calendar View */
+
+.total-staff-div {
+    height:100%;
+    border: solid 2px;
+    z-index: -1;
+}
+
+.staffing-div {
+    display: inline-block;
+    max-width: 80px;
+    height: 200px;
+}
+
+.staffing-percent-div {
+    position: relative;
+    border: solid 2px;
+}
