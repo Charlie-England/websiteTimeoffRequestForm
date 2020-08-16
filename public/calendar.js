@@ -44,43 +44,49 @@ function reqListener() {
     //creates divs for each provier type to show staffing level
     let staffingReport = JSON.parse(this.responseText);
 
-    let PhDPercent =  (staffingReport["PhD"][1]/staffingReport["PhD"][0])*100;
-    let mhwasstmaPercent =  (staffingReport["MHW Asst/MA"][1]/staffingReport["MHW Asst/MA"][0])*100;
-    let rnPercent =  (staffingReport["RN"][1]/staffingReport["RN"][0])*100;
     $(".staffing-report").append("<div class='row staffing-row'></div>")
 
     //MLT
     let mltPercent = (staffingReport["MLT"][1]/staffingReport["MLT"][0])*100;
     let mltColor = determineColor(mltPercent);
-    createBars("mlt", mltPercent, mltColor);
+    createBars("MLT", mltPercent, mltColor, staffingReport["MLT"]);
 
     //MD
-    let mdPercent =  (staffingReport["MD"][1]/staffingReport["MD"][0])*100;
+    let mdPercent = (staffingReport["MD"][1]/staffingReport["MD"][0])*100;
     let mdColor = determineColor(mdPercent);
-    createBars("md", mdPercent, mdColor);
+    createBars("MD", mdPercent, mdColor, staffingReport["MD"]);
 
     //PhD
+    let phdPercent = (staffingReport["PhD"][1]/staffingReport["PhD"][0])*100;
+    let phdColor = determineColor(phdPercent);
+    createBars("PhD", phdPercent, phdColor, staffingReport["PhD"]);
 
     //RN
+    let rnPercent = (staffingReport["RN"][1]/staffingReport["RN"][0])*100;
+    let rnColor = determineColor(rnPercent);
+    createBars("RN", rnPercent, rnColor, staffingReport["RN"]);
 
     //MHW Asst
+    let mhwasstmaPercent = (staffingReport["MHW Asst/MA"][1]/staffingReport["MHW Asst/MA"][0])*100;
+    let mhwasstmaColor = determineColor(mhwasstmaPercent);
+    createBars("AsstMA", mhwasstmaPercent, mhwasstmaColor, staffingReport["MHW Asst/MA"]);
 
 }
 
 function determineColor(percent) {
     if (percent < 50) {
         return "red";
-    } else if (percent < 75) {
+    } else if (percent < 70) {
         return "orange";
     } else {
         return "green"
     }
 }
 
-function createBars(providerType, percent, color) {
+function createBars(providerType, percent, color, staffReportList) {
     $(".staffing-row").append(`<div class='${providerType}-div col staffing-div'><p>${providerType}</p></div>`);
     $(`.${providerType}-div`).append(`<div class='total-${providerType}-staff total-staff-div'></div>`);
-    $(`.${providerType}-div`).append(`<div class='${providerType}-staffing-level staffing-percent-div'></div>`);
+    $(`.${providerType}-div`).append(`<div class='${providerType}-staffing-level staffing-percent-div'>${staffReportList[1]}/${staffReportList[0]}</div>`);
     $(`.${providerType}-staffing-level`).css({"height":`${percent}%`, "background-color":`${color}`, "bottom":`${percent}%`});
 
 } 
