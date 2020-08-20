@@ -106,7 +106,7 @@ function sendRequestEmail(data) {
     let mailOptions = {
         from: "facmhwtimeoffrequestfunneler@gmail.com",
         to: "facbhsvac@kp.org",
-        subject: "test",
+        subject: "FAC MHW Time Off Request",
         text: `${mailOptionsText}`
     };
 
@@ -256,7 +256,7 @@ function getMailString(parsedData) {
 
     let emailString = `Name: ${firstName} ${lastName}\n`;
     emailString += `Provider Type: ${parsedData.providerType}\n\n`;
-    emailString += `Start Date: ${parsedData.leaveStart} -> End Date: ${parsedData.leaveEnd} || Return Date: ${parsedData.returnDate}\n`;
+    emailString += `Start Date: ${parsedData.leaveStart} -> End Date: ${parsedData.leaveEnd} || Return Date: ${parsedData.returnDate} \n\n`;
     emailString += `Requesting days: ${dayNumAndStringObject.daysStrings}\n\n`;
     emailString += "___________Admin Use________________\n";
     emailString += `____________________________________\n\n`;
