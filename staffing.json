@@ -1,7 +1,7 @@
 {
     "RDO":{
-        "Monday":["Susan"],
-        "Tuesday":[],
+        "Monday":{"MLT":3},
+        "Tuesday":{"MLT":4},
         "Wednesday":[],
         "Thursday":[],
         "Friday":[]

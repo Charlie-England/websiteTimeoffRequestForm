@@ -16,7 +16,7 @@ app.post("/",function(req, res) {
     req.on("data", function(data) {
         let listOfDates = modifyToListOfDates(data);
         storeDates(listOfDates);
-        // sendRequestEmail(data);
+        sendRequestEmail(data);
     })
     res.send("done!")
 })
@@ -92,6 +92,7 @@ app.listen(process.env.PORT || 3000, function() {
 
 function sendRequestEmail(data) {
     let parsedData = JSON.parse(data);
+    let mailOptionsText = getMailString(parsedData);
 
     let transporter = nodemailer.createTransport({
         service: "gmail", 
@@ -106,7 +107,7 @@ function sendRequestEmail(data) {
         from: "facmhwtimeoffrequestfunneler@gmail.com",
         to: "facbhsvac@kp.org",
         subject: "test",
-        text: `${parsedData}`
+        text: `${mailOptionsText}`
     };
 
     transporter.sendMail(mailOptions, function(error, info) {
@@ -210,7 +211,7 @@ function getRangeOfDates(firstDate, lastDate) {
     const oneDay = 24 * 60 * 60 * 1000;
     let datesReturnList = [];
 
-    let diffDays = Math.round(Math.abs((firstDateClass-lastDateClass) / oneDay))
+    let diffDays = Math.round(Math.abs((firstDateClass-lastDateClass) / oneDay));
 
     for (let i =0; i <= diffDays; i++) {
         let dateToPush = new Date()
@@ -235,3 +236,87 @@ function getRangeOfDates(firstDate, lastDate) {
     
     return datesReturnList;
 }
+
+function getMailString(parsedData) {
+    let today = new Date();
+
+    let todayString = today.toLocaleDateString("en-us");
+
+    let dayNumAndStringObject = calcNumberOfDays(parsedData.leaveStart, parsedData.leaveEnd);
+
+    let leaveTypesString = '';
+    if (parsedData.leaveTypes.length === 1) {
+        leaveTypesString = parsedData.leaveTypes
+    } else {
+        leaveTypesString = parsedData.leaveTypes.join("/");
+    }
+
+    let firstName = parsedData.firstName;
+    let lastName = parsedData.lastName;
+
+    let emailString = `Name: ${firstName} ${lastName}\n`;
+    emailString += `Provider Type: ${parsedData.providerType}\n\n`;
+    emailString += `Start Date: ${parsedData.leaveStart} -> End Date: ${parsedData.leaveEnd} || Return Date: ${parsedData.returnDate}\n`;
+    emailString += `Requesting days: ${dayNumAndStringObject.daysStrings}\n\n`;
+    emailString += "___________Admin Use________________\n";
+    emailString += `____________________________________\n\n`;
+    emailString += `${firstName} ${lastName} (${parsedData.providerType}) Off - (${leaveTypesString})\n\n`
+    emailString += `Name: ${firstName} ${lastName} | Req Date: ${todayString} | Prov Type: ${parsedData.providerType} | Start:end: ${parsedData.leaveStart} -> ${parsedData.leaveEnd} | # of days: ${dayNumAndStringObject.numberOfDays} | ${parsedData.comments}\n`;
+    
+
+    console.log(emailString);
+    
+
+    return emailString
+}
+
+function calcNumberOfDays(start, end) {
+    //convert start and end dates to Date objects
+    //find difference
+    //returns object {numberOfDays: #, daysStrings: ''}
+    let returnObject = {};
+    let startDate = parseDate(start);
+    let endDate = parseDate(end);
+    let curDate = startDate;
+
+    if (start === end) {
+        return {numberOfDays: "1", daysStrings: curDate.toLocaleDateString("en-us",{month:"short", weekday:"long", day:"numeric", year:"numeric"})};
+    }
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    let numDays = Math.round(Math.abs((startDate-endDate) / oneDay)) + 1;
+    let dayList = [];
+    let trueNumDays = 0;
+
+    for (let i = 0; i < numDays; i++) {
+        curDate.setDate(startDate.getDate() + 1);
+        if (curDate.getDay() != "0" && curDate.getDay() != "6") {
+            dayList.push(curDate.toLocaleDateString("en-us",{month:"short", weekday:"long", day:"numeric", year:"numeric"}));
+            trueNumDays++;
+        }
+    }
+
+    returnObject.numberOfDays = trueNumDays;
+    returnObject.daysStrings = dayList.join(", ");
+    return returnObject;
+}
+
+function parseDate(dateString) {
+    let dateSplit = dateString.split("-");
+
+    let year = dateSplit[0];
+    let month = dateSplit[1];
+    let day = dateSplit[2];
+
+    month--;
+
+    return new Date(year, month, day);
+}
+
+/*
+RDO Schedule:
+Monday: Cheryl (MLT), Jody (MLT), Olga (MD) EOW-9/21 off, Susan (MLT)
+Tuesday: Brenda (MLT), Ella (MD), Sam (PhD), Reena (MD) EOW 9/29-Off
+Thursday: Jackson (MD), Jody (MLT)
+Friday: Margaret (MLT), Mike (MLT), Reena (MD) EOW-9/25 off, Katrina (MLT) EOW-10/2 off, Olga (MD) EOW-10/2 Off
+*/

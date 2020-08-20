@@ -27,6 +27,8 @@ function updateCalendarMins() {
 }
 
 function staffingReportMain() {
+    //called when selectDate id on calendar.html is changed
+    //makes a post request to the server and retrieves info about the staffing levels on the specific day
     $(".staffing-report").empty();
     let xhttp = new XMLHttpRequest();
 
@@ -74,6 +76,7 @@ function reqListener() {
 }
 
 function determineColor(percent) {
+    //Takes the percent staffing as an input and returns a color string or color hash for specific color based on percent
     if (percent < 50) {
         return "red";
     } else if (percent < 70) {
@@ -84,9 +87,12 @@ function determineColor(percent) {
 }
 
 function createBars(providerType, percent, color, staffReportList) {
+    //takes the provider type, percent staffing, color of bar and a list of the staffing for that provider type
+    //creates a row with a paragraph of the provider type
+    //appends to this new row 2 boxes
+    //changes the height of the second box to align with staffing percent
     $(".staffing-row").append(`<div class='${providerType}-div col staffing-div'><p>${providerType}</p></div>`);
     $(`.${providerType}-div`).append(`<div class='total-${providerType}-staff total-staff-div'></div>`);
     $(`.${providerType}-div`).append(`<div class='${providerType}-staffing-level staffing-percent-div'>${staffReportList[1]}/${staffReportList[0]}</div>`);
     $(`.${providerType}-staffing-level`).css({"height":`${percent}%`, "background-color":`${color}`, "bottom":`${percent}%`});
-
 } 
