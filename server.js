@@ -9,57 +9,15 @@ const { StringDecoder } = require("string_decoder");
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 app.get("/",function(req,res) {
-    mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
-
-    const db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function() {
-        const dayOffSchema = new mongoose.Schema({
-            startDate: String,
-            endDate: String,
-            returnDate: String,
-            typeOfLeave: String,
-            comments: String
-        });
-
-        const employeeSchema = new mongoose.Schema({
-            _id: String,
-            firstName: String,
-            lastName: String,
-            schedule: { //day: [working true/false, hours worked]
-                monday:[Boolean,Number], 
-                tuesday:[Boolean,Number],
-                wednesday:[Boolean,Number],
-                thursday:[Boolean,Number],
-                friday:[Boolean,Number]
-            },
-            daysOff:[dayOffSchema]
-        });
-    });
-
-    const Employee = mongoose.model('Employee', employeeSchema);
-
-    const employee1 = new Employee({
-        _id: "A058859",
-        firstName: "Charlie",
-        lastName: "England",
-        schedule: {
-            monday:[true,8],
-            tuesday:[true,8],
-            wednesday:[true,8],
-            thursday:[true,8],
-            friday:[true,8]
-        }
-    });
-
-    employee1.save();
-    console.log("employee 1 saved");
-
-    res.sendFile(__dirname+"/public/index.html");
-
+    res.render('index');
 });
+
+app.get("/:paramName", function(req, res) {
+    const nuid = req.params.paramName;
+})
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
