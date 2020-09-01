@@ -1,0 +1,10 @@
+<%- include("partials/header") %>
+
+<h3>Please input nuid:</h3>
+<form action="/Time-Off-Request" method="POST">
+    <input type="text" name="nuid" oninput="this.value = this.value.toUpperCase()">
+    <button class="btn btn-primary" type="submit">Go</button>
+    <p id="error-message"><%= errorMessage %></p>
+</form>
+
+<%- include("partials/footer") %>

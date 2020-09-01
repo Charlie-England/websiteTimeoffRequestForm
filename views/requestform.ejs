@@ -9,13 +9,13 @@
                 <div class="row">
                     <div class="col">
                         <label class="firstNameLabel" for="firstName">First Name:</label>
-                        <input type="text" id="firstName">
+                        <p id="firstName"><%= firstName %></p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
                         <label class="lastNameLabel" for="lastName">Last Name:</label>
-                        <input type="text" id="lastName">
+                        <p id="lastName"><%= lastName %></p>
                     </div>
                 </div>
             </div>
@@ -27,14 +27,15 @@
                             <div class="input-group-prepend">
                               <label class="input-group-text" for="providerType">Provider Type</label>
                             </div>
-                            <select class="custom-select provider-select" id="providerType">
+                            <p id="proivderType"><%= providerType %></p>
+                            <!-- <select class="custom-select provider-select" id="providerType">
                               <option value="0" selected>Choose...</option>
                               <option value="1">MLT</option>
                               <option value="2">MD</option>
                               <option value="3">PhD</option>
                               <option value="4">MHW Asst/MA</option>
                               <option value="5">RN</option>
-                            </select>
+                            </select> -->
                           </div>
                     </div>
                 </div>

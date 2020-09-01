@@ -6,18 +6,101 @@ const { resolve } = require("path");
 const mongoose = require("mongoose");
 const { StringDecoder } = require("string_decoder");
 
+const dayOffSchema = new mongoose.Schema({
+    startDate: String,
+    endDate: String,
+    returnDate: String,
+    typeOfLeave: String,
+    comments: String
+});
+
+const employeeSchema = new mongoose.Schema({
+    _id: String,
+    firstName: String,
+    lastName: String,
+    providerType: String,
+    schedule: { //day: [working true/false, hours worked]
+        mondayWorking:Boolean,
+        mondayHours:Number,
+
+        tuesdayWorking:Boolean,
+        tuesdayHours:Number,
+
+        wednesdayWorking:Boolean,
+        wednesdayHours:Number,
+
+        thursdayWorking:Boolean,
+        thursdayHours:Number,
+
+        fridayWorking:Boolean,
+        fridayHours:Number
+    },
+    scheduleWeek2: {
+        referenceWeek: String,
+
+        mondayWorking:Boolean,
+        mondayHours:Number,
+
+        tuesdayWorking:Boolean,
+        tuesdayHours:Number,
+
+        wednesdayWorking:Boolean,
+        wednesdayHours:Number,
+
+        thursdayWorking:Boolean,
+        thursdayHours:Number,
+
+        fridayWorking:Boolean,
+        fridayHours:Number
+    },
+    daysOff:[dayOffSchema]
+});
+
+const Employee = mongoose.model('Employee', employeeSchema);
+
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get("/",function(req,res) {
-    res.render('index');
+    const errorMessage = "";
+
+    res.render('landing', {errorMessage:errorMessage});
+});
+
+app.get("/error", function(req, res) {
+    const errorMessage = "Unable to find NUID, please try again";
+
+    res.render('landing', {errorMessage:errorMessage});
+})
+
+app.post("/Time-Off-Request", function(req, res) {
+    const nuid = req.body.nuid;
+    res.redirect("/"+nuid);
 });
 
 app.get("/:paramName", function(req, res) {
     const nuid = req.params.paramName;
-})
+    mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
+
+    Employee.findOne({"_id":nuid}, function(err, employee) {
+        if (err) {
+            console.log(err);
+            //route back to landing with error
+            res.redirect("/error");
+        } else if (employee===null) {
+            res.redirect("/error");
+        } else {
+            res.render("requestform",{
+                firstName:employee.firstName, 
+                lastName:employee.lastName,
+                providerType:employee.providerType 
+            });
+            mongoose.connection.close();
+        }
+    });
+});
 
 app.post("/",function(req, res) {
     req.on("data", function(data) {
