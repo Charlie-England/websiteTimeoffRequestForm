@@ -36,8 +36,10 @@ $("#returnDate").change(function() {
 $(".send-final").click(function() {
     let xhttp = new XMLHttpRequest();
     let formInputs = gatherFormInputs();
+    const route = "/"+$("#nuid").html();
+    console.log(route);
 
-    xhttp.open("POST","/", true);
+    xhttp.open("POST",route, true);
     xhttp.setRequestHeader('Content-Type', 'application/json charset=UTF-8');
     xhttp.send(JSON.stringify(formInputs));
 
@@ -98,15 +100,12 @@ function checkFormCompletion(formInputs) {
 
 function clearForm() {
     //Clear entire form, calls clear checkboxes to clear those as well
-    document.querySelector("#firstName").value = "";
-    document.querySelector("#lastName").value = "";
     $("#startDate").val("");
     $("#endDate").val("");
     $("#returnDate").val("");
     $(".startDateDay").text("");
     $(".endDateDay").text("");
     $(".returnDateDay").text("");
-    $("#providerType").val("0");
     $("#comments").val("");
 
     clearCheckboxes();
@@ -115,9 +114,9 @@ function clearForm() {
 function gatherFormInputs() {
     //Gathers all information that has been input into the form
     let formInputs = {
-        "firstName":$("#firstName").val(),
-        "lastName":$("#lastName").val(),
-        "providerType":$("#providerType").val(),
+        "firstName":$("#firstName").html(),
+        "lastName":$("#lastName").html(),
+        "providerType":$("#providerType").html(),
         "leaveStart":$("#startDate").val(),
         "leaveEnd":$("#endDate").val(),
         "returnDate":$("#returnDate").val(),
@@ -125,7 +124,6 @@ function gatherFormInputs() {
         "comments":$("#comments").val(),
     }
     formInputs["leaveTypes"] = getLeaveTypes();
-    formInputs = modifyProviderType(formInputs);
 
     return formInputs;
 }
@@ -343,35 +341,4 @@ function getModalDate(date) {
     //slices the date object int he form 2020-07-30 and returns M/D/Year in mm/dd/yy
     modifiedDate = `${date.slice(5,7)}/${date.slice(8,10)}/${date.slice(2,4)}`;
     return modifiedDate;
-}
-
-function modifyProviderType(formInputs) {
-    //takes formInputs and modifies providerType to correlate to the value
-    //returns this modified formInputs
-    let providerNum = formInputs["providerType"];
-    let providerString = "";
-
-    switch (providerNum) {
-        case "0":
-            providerString = "null";
-            break;
-        case "1": 
-            providerString = "MLT";
-            break;
-        case "2":
-            providerString = "MD";
-            break;
-        case "3":
-            providerString = "PhD";
-            break;
-        case "4":
-            providerString = "MHW Asst/MA";
-            break;
-        case "5":
-            providerString = "RN";
-            break;
-    }
-
-    formInputs["providerType"] = providerString;
-    return formInputs;
 }

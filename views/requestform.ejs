@@ -8,38 +8,36 @@
             <div class="col col-6">
                 <div class="row">
                     <div class="col">
-                        <label class="firstNameLabel" for="firstName">First Name:</label>
-                        <p id="firstName"><%= firstName %></p>
+                        <label class="nameLabel firstNameLabel" for="firstName">First Name:</label>
+                        <span id="firstName"><%= firstName %></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label class="lastNameLabel" for="lastName">Last Name:</label>
-                        <p id="lastName"><%= lastName %></p>
+                        <label class="nameLabel lastNameLabel" for="lastName">Last Name:</label>
+                        <span id="lastName"><%= lastName %></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="nameLabel" for="nuid">NUID:</label>
+                        <span id="nuid"><%=nuid%></span>
                     </div>
                 </div>
             </div>
 
             <div class="col col-6">
                 <div class="row">
-                    <div class="col">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                              <label class="input-group-text" for="providerType">Provider Type</label>
-                            </div>
-                            <p id="proivderType"><%= providerType %></p>
-                            <!-- <select class="custom-select provider-select" id="providerType">
-                              <option value="0" selected>Choose...</option>
-                              <option value="1">MLT</option>
-                              <option value="2">MD</option>
-                              <option value="3">PhD</option>
-                              <option value="4">MHW Asst/MA</option>
-                              <option value="5">RN</option>
-                            </select> -->
-                          </div>
+                    <div class="col col-12">
+                        <label class="nameLabel" for="providerType">Provider Type:</label>
+                        <span id="providerType"><%= providerType %></span>
+                    </div>
+                    <div class="col col-12">
+                        <a class="btn btn-info" href="/viewRequests/<%= nuid %>" target="_blank">View Requests</a>
                     </div>
                 </div>
             </div>
+
 
             <div class="col col-12">
                 <hr>

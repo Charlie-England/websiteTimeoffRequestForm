@@ -72,3 +72,7 @@ h1 {
 form {
     text-align: center;
 }
+
+.nameLabel {
+    font-weight: bold;
+}

@@ -57,6 +57,7 @@ const employeeSchema = new mongoose.Schema({
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
+const DayOff = mongoose.model("DayOff", dayOffSchema);
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -95,19 +96,24 @@ app.get("/:paramName", function(req, res) {
             res.render("requestform",{
                 firstName:employee.firstName, 
                 lastName:employee.lastName,
-                providerType:employee.providerType 
+                providerType:employee.providerType,
+                nuid:nuid
             });
             mongoose.connection.close();
         }
     });
 });
 
-app.post("/",function(req, res) {
+app.get("/viewRequests/:paramName", function(req, res) {
+    res.redirect("/");
+})
+
+app.post("/:paramName",function(req, res) {
     req.on("data", function(data) {
-        let listOfDates = modifyToListOfDates(data);
-        storeDates(listOfDates);
-        sendRequestEmail(data);
-    })
+        console.log(req.params.paramName);
+        storeTimeOff(data, req.params.paramName);
+        // sendRequestEmail(data);
+    });
     res.send("done!")
 });
 
@@ -221,110 +227,41 @@ function getEmailPassword() {
     })
 }
 
-
-function modifyToListOfDates(timeOffRequest) {
-    timeOffRequest = JSON.parse(timeOffRequest);
-    let leaveStart = timeOffRequest.leaveStart;
-    let leaveEnd = timeOffRequest.leaveEnd;
-    let modifiedDateList = []
-
-    if (leaveStart == leaveEnd) {
-        let moddedRequest = {
-            date: leaveStart,
-            name: `${timeOffRequest.firstName} ${timeOffRequest.lastName}`,
-            providerType: timeOffRequest.providerType,
-            leaveTypes: timeOffRequest.leaveTypes,
-            comments: timeOffRequest.comments
-        }
-        modifiedDateList.push(moddedRequest);
-        
-    } else {
-        let listOfDates = getRangeOfDates(leaveStart, leaveEnd);
-        for (let i = 0; i < listOfDates.length; i++) {
-            let selectedDate = listOfDates[i];
-
-            let moddedRequest = {
-                date: selectedDate,
-                name: `${timeOffRequest.firstName} ${timeOffRequest.lastName}`,
-                providerType: timeOffRequest.providerType,
-                leaveTypes: timeOffRequest.leaveTypes,
-                comments: timeOffRequest.comments
-            }
-
-            modifiedDateList.push(moddedRequest);
-
-        }
+function storeTimeOff(timeOffData, nuid) {
+    /* sent timeOffData {
+        firstName: string
+        lastName: string
+        providerType: string
+        leavestart: string
+        leaveEnd: string
+        returnDate: string
+        leaveTypes: [string]
+        comments: string
     }
+    */
 
-    return modifiedDateList;
-}
+    timeOffData = JSON.parse(timeOffData);
+    let leaveTypesString = timeOffData.leaveTypes.join("/");
 
+    const newTimeOffRequest = new DayOff({
+        startDate: timeOffData.leaveStart,
+        endDate: timeOffData.leaveEnd,
+        returnDate: timeOffData.returnDate,
+        typeOfLeave: leaveTypesString,
+        comments: timeOffData.comments
+    });
 
-function storeDates(dateList) {
-    fs.readFile("requests.json", "utf8", function readFileCallback(err, data) {
+    //Add to _id in mongoose
+    mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
+
+    Employee.updateOne({"_id":nuid},{$push:{daysOff:newTimeOffRequest}},(err) => {
         if (err) {
             console.log(err);
         } else {
-            let currentFile = JSON.parse(data);
-
-            for (let i = 0; i < dateList.length; i++) {
-                let dateCurrent = dateList[i].date;
-
-                try {
-                    currentFile[dateCurrent];
-                    currentFile[dateCurrent].push(dateList[i]);
-                } catch {
-                    currentFile[dateCurrent] = []
-                    currentFile[dateCurrent].push(dateList[i])
-
-                    console.log(`Date ${dateCurrent} not found, created new date`)
-                }
-            }
-
-            let updatedFile = JSON.stringify(currentFile);
-                
-            fs.writeFile("requests.json", updatedFile, "utf8", (err, jsonString) => {
-
-                if (err) {
-                    console.log("File read failed:", err)
-                    return
-                }
-                console.log("Completed Write")
-            });
+            console.log("Employee: "+nuid+" time off request added successfully");
+            mongoose.connection.close();
         }
-    }
-)}
-
-function getRangeOfDates(firstDate, lastDate) {
-    let firstDateClass = new Date(firstDate);
-    let lastDateClass = new Date(lastDate);
-    const oneDay = 24 * 60 * 60 * 1000;
-    let datesReturnList = [];
-
-    let diffDays = Math.round(Math.abs((firstDateClass-lastDateClass) / oneDay));
-
-    for (let i =0; i <= diffDays; i++) {
-        let dateToPush = new Date()
-        dateToPush.setDate(firstDateClass.getDate() + (i+1));
-
-        let day = dateToPush.getDay();
-        if (day != "0" && day != "6") {
-    
-            let dateDay = dateToPush.getDate();
-            if (dateDay.length < 2) {
-                dateDay = `0${dateDay}`;
-            }
-
-            let month = dateToPush.getMonth() + 1;
-            if (month.toString().length < 2) {
-                month = `0${month}`;
-            }
-            let dateString = `${dateToPush.getFullYear()}-${month}-${dateDay}`
-            datesReturnList.push(dateString);
-        }
-    }
-    
-    return datesReturnList;
+    });
 }
 
 function getMailString(parsedData) {
