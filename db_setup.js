@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const { resolve } = require("path");
 const mongoose = require("mongoose");
+const { NONAME } = require("dns");
 
 const dayOffSchema = new mongoose.Schema({
     startDate: String,
@@ -18,6 +19,7 @@ const employeeSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     providerType: String,
+    access: String,
     schedule: { //day: [working true/false, hours worked]
         mondayWorking:Boolean,
         mondayHours:Number,
@@ -106,6 +108,7 @@ function addEmployeeModels() {
         firstName:"Charlie",
         lastName:"England",
         providerType:"Admin",
+        access: "admin",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -131,6 +134,7 @@ function addEmployeeModels() {
         firstName:"Susan",
         lastName:"Miller",
         providerType: "MLT",
+        access: "none",
         schedule: {
             mondayWorking:false,
             mondayHours:0,
@@ -156,6 +160,7 @@ function addEmployeeModels() {
         firstName:"Jody",
         lastName:"Dearborn",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:false,
             mondayHours:0,
@@ -181,6 +186,7 @@ function addEmployeeModels() {
         firstName:"Brenda",
         lastName:"Arzillo",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -206,6 +212,7 @@ function addEmployeeModels() {
         firstName:"Mike",
         lastName:"Marletto",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -231,6 +238,7 @@ function addEmployeeModels() {
         firstName:"Margaret",
         lastName:"Pleasant",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -256,6 +264,7 @@ function addEmployeeModels() {
         firstName:"Ian",
         lastName:"Krauter",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -281,6 +290,7 @@ function addEmployeeModels() {
         firstName:"Jarim",
         lastName:"Lee",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -306,6 +316,7 @@ function addEmployeeModels() {
         firstName:"Lynette",
         lastName:"Thorlakson",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -331,6 +342,7 @@ function addEmployeeModels() {
         firstName:"Cheryl",
         lastName:"Poynor",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:false,
             mondayHours:0,
@@ -356,6 +368,7 @@ function addEmployeeModels() {
         firstName:"Jennifer",
         lastName:"Watanabe",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -381,6 +394,7 @@ function addEmployeeModels() {
         firstName:"Katrina",
         lastName:"Lindauer",
         providerType:"MLT",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -424,6 +438,7 @@ function addEmployeeModels() {
         firstName:"Reena",
         lastName:"Grewal",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -467,6 +482,7 @@ function addEmployeeModels() {
         firstName:"Olga",
         lastName:"Godina",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -510,6 +526,7 @@ function addEmployeeModels() {
         firstName:"Eric",
         lastName:"Greenman",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -535,6 +552,7 @@ function addEmployeeModels() {
         firstName:"Jackson",
         lastName:"Brammer",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -560,6 +578,7 @@ function addEmployeeModels() {
         firstName:"Ella",
         lastName:"Miropolskiy",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -585,6 +604,7 @@ function addEmployeeModels() {
         firstName:"Ashok",
         lastName:"Shimoji-Krishnan",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -610,6 +630,7 @@ function addEmployeeModels() {
         firstName:"Mabel",
         lastName:"Bongmba",
         providerType:"MD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -636,6 +657,7 @@ function addEmployeeModels() {
         firstName:"Mari",
         lastName:"McFadden",
         providerType:"RN",
+        access:"none",
         schedule: {
             mondayWorking:false,
             mondayHours:0,
@@ -661,6 +683,7 @@ function addEmployeeModels() {
         firstName:"Crystal",
         lastName:"Skelton",
         providerType:"RN",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:9,
@@ -687,6 +710,7 @@ function addEmployeeModels() {
         firstName:"Payton",
         lastName:"Jones",
         providerType:"MHW Asst",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -713,6 +737,7 @@ function addEmployeeModels() {
         firstName:"Joanna",
         lastName:"Stagg",
         providerType:"PhD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -738,6 +763,7 @@ function addEmployeeModels() {
         firstName:"Samantha",
         lastName:"Jimenez",
         providerType:"PhD",
+        access:"none",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -763,6 +789,7 @@ function addEmployeeModels() {
         firstName:"Jeffrey",
         lastName:"Vannice",
         providerType:"PhD",
+        access:"admin",
         schedule: {
             mondayWorking:true,
             mondayHours:8,
@@ -783,4 +810,5 @@ function addEmployeeModels() {
     });
     employees.push(jeffV);
     
+    mongoose.connection.close();
 }

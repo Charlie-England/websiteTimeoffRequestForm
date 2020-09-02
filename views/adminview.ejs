@@ -3,17 +3,25 @@
 <div class="container">
 
     <h1>Admin View</h1>
-    <form action="/admin/A058859/all" method="POST">
+    <div class="row">
+        <div class="col col-8">
+            <form action="/admin/requests-view/all" method="POST">
 
-        <label for="employees">Employees</label>
-        <select name="employees" id="employees">
-            <option id="all" value="all" selected>All Unprocessed</option>
-            <% curEmpInfo.forEach(employee => { %>
-                <option id="<%=employee.nuid%>" value="<%= employee.nuid %>"><%= employee.name %></option>
-            <% }); %>
-        </select>
-        <button class="btn btn-primary" type="submit">Go</button>
-    </form>
+                <label for="employees">Employees</label>
+                <select name="employees" id="employees" onchange="this.form.submit()">
+                    <option id="all" value="all" selected>All Unprocessed</option>
+                    <% curEmpInfo.forEach(employee => { %>
+                        <option id="<%=employee.nuid%>" value="<%= employee.nuid %>"><%= employee.name %></option>
+                    <% }); %>
+                </select>
+            </form>
+        </div>
+        <div class="col col-4">
+            <a class="btn btn-secondary float-right btn-sm" href="/admin/employee-management">Employee Management</a>
+        </div>
+
+    </div>
+
 
     <div class="row">
         <% requestedTimes.forEach(requestedTime => { %>
@@ -26,6 +34,13 @@
 
 
 </div>
+
+<!--
+    TO DO:
+    1) Implement creation of new provider / changing of provider info
+    2) Be able to mark requested as done and update this in db
+
+-->
 
 
 <script type="text/javascript" src="/admin.js"></script>

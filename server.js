@@ -20,6 +20,7 @@ const employeeSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     providerType: String,
+    access: String,
     schedule: { //day: [working true/false, hours worked]
         mondayWorking:Boolean,
         mondayHours:Number,
@@ -62,7 +63,7 @@ const DayOff = mongoose.model("DayOff", dayOffSchema);
 
 let app = express();
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('public'));
+app.use(express.static(__dirname+'/public'));
 app.set('view engine', 'ejs');
 
 app.get("/",function(req,res) {
@@ -98,7 +99,8 @@ app.get("/:paramName", function(req, res) {
                 firstName:employee.firstName, 
                 lastName:employee.lastName,
                 providerType:employee.providerType,
-                nuid:nuid
+                nuid:nuid,
+                access:employee.access
             });
             mongoose.connection.close();
         }
@@ -123,7 +125,7 @@ app.get("/viewRequests/:paramName", function(req, res) {
     });
 });
 
-app.get("/admin/A058859/:paramName", function(req, res) {
+app.get("/admin/requests-view/:paramName", function(req, res) {
     mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
     let employeeNames = [];
     let requestedTimes = [];
@@ -151,10 +153,14 @@ app.get("/admin/A058859/:paramName", function(req, res) {
     });
 });
 
-app.post("/admin/A058859/all",function(req,res) {
+app.get("/admin/employee-management", function(req, res) {
+    res.render("modifyaddemployee");
+});
+
+app.post("/admin/requests-view/all",function(req,res) {
     const nuid = req.body.employees;
-    const route = "/admin/A058859/"+nuid;
-    
+    const route = "/admin/requests-view/"+nuid;
+
     res.redirect(route);
 })
 

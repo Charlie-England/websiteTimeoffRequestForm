@@ -35,6 +35,12 @@
                     <div class="col col-12">
                         <a class="btn btn-info" href="/viewRequests/<%= nuid %>" target="_blank">View Requests</a>
                     </div>
+                    <div class="col col-12">
+                        <% if (access==="admin") { %>
+                            <br>
+                            <a class="btn btn-info" href="/admin/requests-view/all">Admin View</a>
+                        <% } %>
+                    </div>
                 </div>
             </div>
 
