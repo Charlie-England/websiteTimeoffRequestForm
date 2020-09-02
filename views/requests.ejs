@@ -1,10 +1,18 @@
 <%- include("partials/header") %>
 
-<h1><%= firstName %></h1>
-<h1><%= lastName %></h1>
-<h1><%= nuid %></h1>
-<% requestList.forEach(request => { %>
-    <p><%= request %></p>
-<% }) %>
+<div class="row">
+    <div class="col col-12">
+        <h1><%= firstName %></h1>
+        <h1><%= lastName %></h1>
+        <h1><%= nuid %></h1>
+    </div>
+    <div class="row">
+        <% requestList.forEach(request => { %>
+            <div class="col col-3"></div>
+            <p><%= request %></p>
+        <% }) %>
+    </div>
+</div>
+
 
 <%- include("partials/footer") %>

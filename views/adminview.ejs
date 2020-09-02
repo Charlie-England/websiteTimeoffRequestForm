@@ -1,0 +1,33 @@
+<%- include("partials/header") %>
+
+<div class="container">
+
+    <h1>Admin View</h1>
+    <form action="/admin/A058859/all" method="POST">
+
+        <label for="employees">Employees</label>
+        <select name="employees" id="employees">
+            <option id="all" value="all" selected>All Unprocessed</option>
+            <% curEmpInfo.forEach(employee => { %>
+                <option id="<%=employee.nuid%>" value="<%= employee.nuid %>"><%= employee.name %></option>
+            <% }); %>
+        </select>
+        <button class="btn btn-primary" type="submit">Go</button>
+    </form>
+
+    <div class="row">
+        <% requestedTimes.forEach(requestedTime => { %>
+        <div class="col col-4">
+            <p><%= requestedTime %></p>
+        </div>
+
+        <% }); %>
+    </div>
+
+
+</div>
+
+
+<script type="text/javascript" src="/admin.js"></script>
+
+<%- include("partials/footer") %>

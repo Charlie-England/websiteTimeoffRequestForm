@@ -118,8 +118,44 @@ app.get("/viewRequests/:paramName", function(req, res) {
                 nuid:employee._id,
                 requestList:employee.daysOff
             });
+            mongoose.connection.close();
         }
     });
+});
+
+app.get("/admin/A058859/:paramName", function(req, res) {
+    mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
+    let employeeNames = [];
+    let requestedTimes = [];
+    let nuid = req.params.paramName;
+
+    Employee.find(function(err,employees) {
+        employees.forEach(employee => {
+            let name = employee.firstName + " " + employee.lastName;
+            employeeNames.push({name:name,nuid:employee._id});
+
+            if (nuid === "all") {
+                employee.daysOff.forEach(requestTimeOff => {
+                    if (requestTimeOff.status === "Requested") {
+                        requestedTimes.push(requestTimeOff);
+                    }
+                });
+            } else if (nuid === employee._id) {
+                employee.daysOff.forEach(requestTimeOff => {
+                    requestedTimes.push(requestTimeOff);
+                });
+            }
+        });
+        res.render("adminview", {curEmpInfo:employeeNames,requestedTimes:requestedTimes});
+        mongoose.connection.close();
+    });
+});
+
+app.post("/admin/A058859/all",function(req,res) {
+    const nuid = req.body.employees;
+    const route = "/admin/A058859/"+nuid;
+    
+    res.redirect(route);
 })
 
 app.post("/:paramName",function(req, res) {
