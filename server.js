@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const { StringDecoder } = require("string_decoder");
 
 const dayOffSchema = new mongoose.Schema({
+    status: String,
     startDate: String,
     endDate: String,
     returnDate: String,
@@ -105,7 +106,20 @@ app.get("/:paramName", function(req, res) {
 });
 
 app.get("/viewRequests/:paramName", function(req, res) {
-    res.redirect("/");
+    mongoose.connect("mongodb://localhost:27017/mhwtimeoffDB", {useNewUrlParser: true});
+
+    Employee.findOne({"_id":req.params.paramName},function(err, employee) {
+        if (err) {
+            console.log(err)
+        } else {
+            res.render("requests", {
+                firstName:employee.firstName,
+                lastName:employee.lastName,
+                nuid:employee._id,
+                requestList:employee.daysOff
+            });
+        }
+    });
 })
 
 app.post("/:paramName",function(req, res) {
@@ -244,6 +258,7 @@ function storeTimeOff(timeOffData, nuid) {
     let leaveTypesString = timeOffData.leaveTypes.join("/");
 
     const newTimeOffRequest = new DayOff({
+        status: "Requested",
         startDate: timeOffData.leaveStart,
         endDate: timeOffData.leaveEnd,
         returnDate: timeOffData.returnDate,

@@ -1,0 +1,10 @@
+<%- include("partials/header") %>
+
+<h1><%= firstName %></h1>
+<h1><%= lastName %></h1>
+<h1><%= nuid %></h1>
+<% requestList.forEach(request => { %>
+    <p><%= request %></p>
+<% }) %>
+
+<%- include("partials/footer") %>
